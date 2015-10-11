@@ -1,0 +1,44 @@
+6828 decimal is 015254 octal!
+pading space in the right to number 22: 22      .
+chnum1: 29 chnum2: 30
+
+error! writing through NULL pointer! (%n argument)
+
+warning! The value %n argument pointed to has been overflowed!
+chnum1: -1
+show me the sign: +1024, -1024
+entering test_backtrace 5
+entering test_backtrace 4
+entering test_backtrace 3
+entering test_backtrace 2
+entering test_backtrace 1
+entering test_backtrace 0
+Stack backtrace:
+ eip f010012b ebp f0110e08 args 00000000 00000000 00000000 0000001a f0100cc9
+ 	     kern/init.c:19: test_backtrace:F(0,18)+47
+ eip f010010d ebp f0110e28 args 00000000 00000001 f0110e68 0000001a f0100cc9
+ 	     kern/init.c:16: test_backtrace:F(0,18)+29
+ eip f010010d ebp f0110e48 args 00000001 00000002 f0110e88 0000001a f0100cc9
+ 	     kern/init.c:16: test_backtrace:F(0,18)+29
+ eip f010010d ebp f0110e68 args 00000002 00000003 f0110ea8 0000001a f0100cc9
+ 	     kern/init.c:16: test_backtrace:F(0,18)+29
+ eip f010010d ebp f0110e88 args 00000003 00000004 00000000 0000001f 00000000
+ 	     kern/init.c:16: test_backtrace:F(0,18)+29
+ eip f010010d ebp f0110ea8 args 00000004 00000005 00000000 f0110eee 00010094
+ 	     kern/init.c:16: test_backtrace:F(0,18)+29
+ eip f010027a ebp f0110ec8 args 00000005 00000400 fffffc00 f0110fee 00000000
+ 	     kern/init.c:54: i386_init:F(0,18)+139
+ eip f010003e ebp f0110ff8 args 00112021 00000000 00000000 00000000 00000000
+ 	     kern/entry.S:82: <unknown>+0
+1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+Overflow success
+Backtrace success
+leaving test_backtrace 0
+leaving test_backtrace 1
+leaving test_backtrace 2
+leaving test_backtrace 3
+leaving test_backtrace 4
+leaving test_backtrace 5
+Welcome to the JOS kernel monitor!
+Type 'help' for a list of commands.
+K> 
