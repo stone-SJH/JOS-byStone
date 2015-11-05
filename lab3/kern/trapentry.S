@@ -74,8 +74,36 @@ sysenter_handler:
 /*
  * Lab 3: Your code here for system call handling
  */
+/*stone's solution for lab3-B*/
+	//User Data
+	pushl $GD_UD
+	pushl %ebp
+	//flag registers
+	pushfl
+	//User Text
+	pushl $GD_UT
+	pushl %esi
+	pushl $0
+	pushl $0
+	pushl %ds
+	pushl %es
 
-
+	//tf parse to router
+	pushal
+	//switch to Kernel Data
+	movw $GD_KD, %ax
+	movw %ax, %ds
+	movw %ax, %es
+	pushl %esp
+	//router is a method to parse modified register to syscall
+	call router
+	popl %esp
+	popal
+	popl %es
+	popl %ds
+	movl %ebp, %ecx
+	movl %esi, %edx
+	sysexit
 /*
  * Lab 3: Your code here for _alltraps
  */

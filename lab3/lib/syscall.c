@@ -16,7 +16,13 @@ syscall(int num, int check, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 		 "pushl %%edi\n\t"
 				 
                  //Lab 3: Your code here
-
+		 /*stone's solution for lab3-b*/
+		 //TERRIBLE OFFSET!
+		 "movl %%esp,%%ebp\n\t"
+                 "leal 1f, %%esi\n\t"
+                 "sysenter\n\t"
+                 "1:\n\t"
+		 
                  "popl %%edi\n\t"
                  "popl %%esi\n\t"
                  "popl %%ebp\n\t"

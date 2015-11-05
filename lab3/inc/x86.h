@@ -2,6 +2,8 @@
 #define JOS_INC_X86_H
 
 #include <inc/types.h>
+/*stone's solution for lab3-B*/
+#define wrmsr(msr, val1, val2) __asm __volatile("wrmsr" : : "c" (msr), "a" (val1), "d" (val2))
 
 static __inline void breakpoint(void) __attribute__((always_inline));
 static __inline uint8_t inb(int port) __attribute__((always_inline));

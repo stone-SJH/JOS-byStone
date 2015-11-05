@@ -78,6 +78,8 @@ void t17();
 void t18();
 void t19();
 
+void sysenter_handler();
+
 void
 trap_init(void)
 {
@@ -103,6 +105,10 @@ trap_init(void)
 	SETGATE(idt[T_ALIGN], 0, GD_KT, t17, 0);
 	SETGATE(idt[T_MCHK], 0, GD_KT, t18, 0);
 	SETGATE(idt[T_SIMDERR], 0, GD_KT, t19, 0);
+
+	wrmsr(0x174, GD_KT, 0);
+   	wrmsr(0x175, KSTACKTOP, 0);
+	wrmsr(0x176, sysenter_handler, 0);
 	// Per-CPU setup 
 	trap_init_percpu();
 }
@@ -183,6 +189,8 @@ trap_dispatch(struct Trapframe *tf)
 	/*stone's solution for lab3-B*/
 	if (tf->tf_trapno == T_PGFLT)
 		page_fault_handler(tf);
+	if (tf->tf_trapno == T_DEBUG || tf->tf_trapno == T_BRKPT)
+		monitor(tf);
 	
 	// Unexpected trap: The user process or the kernel has a bug.
 	print_trapframe(tf);

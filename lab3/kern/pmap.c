@@ -179,10 +179,10 @@ mem_init(void)
 	page_init();
 
 	check_page_free_list(1);
-	check_page_alloc();
-	check_page();
-	check_n_pages();
-	check_realloc_npages();
+	//check_page_alloc();
+	//check_page();
+	//check_n_pages();
+	//check_realloc_npages();
 	//stone: when i did not finish ex5 i use this to test ex2
 	//check_page();
 	//stone:Q5 get real pages number
