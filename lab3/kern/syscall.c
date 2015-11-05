@@ -38,7 +38,7 @@ sys_cgetc(void)
 static envid_t
 sys_getenvid(void)
 {
-	cprintf("get:%08x\n", curenv->env_id);
+	//cprintf("get:%08x\n", curenv->env_id);
 	return curenv->env_id;
 }
 
@@ -84,7 +84,7 @@ sys_sbrk(uint32_t inc)
 void
 router(struct Trapframe *tf){
 	curenv->env_tf = *tf;
-	syscall(tf->tf_regs.reg_eax, tf->tf_regs.reg_edx, tf->tf_regs.reg_ecx, tf->tf_regs.reg_ebx, tf->tf_regs.reg_edi, 0);
+	tf->tf_regs.reg_eax = syscall(tf->tf_regs.reg_eax, tf->tf_regs.reg_edx, tf->tf_regs.reg_ecx, tf->tf_regs.reg_ebx, tf->tf_regs.reg_edi, 0);
 }
 // Dispatches to the correct kernel function, passing the arguments.
 int32_t

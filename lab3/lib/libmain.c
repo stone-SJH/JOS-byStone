@@ -15,8 +15,8 @@ libmain(int argc, char **argv)
 	// LAB 3: Your code here.
 	/*stone's solution for lab3-B*/
 	//thisenv = 0;
-	thisenv = envs + sys_getenvid();
-	cprintf("libmain:%08x\n", thisenv->env_id);	
+	thisenv = envs + ENVX(sys_getenvid());
+	//cprintf("libmain:%08x\n", thisenv->env_id);	
 	// save the name of the program so that panic() can use it
 	if (argc > 0)
 		binaryname = argv[0];
