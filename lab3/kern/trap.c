@@ -77,7 +77,7 @@ void t16();
 void t17();
 void t18();
 void t19();
-
+/*stone's solution for lab3-B*/
 void sysenter_handler();
 
 void
@@ -105,7 +105,7 @@ trap_init(void)
 	SETGATE(idt[T_ALIGN], 0, GD_KT, t17, 0);
 	SETGATE(idt[T_MCHK], 0, GD_KT, t18, 0);
 	SETGATE(idt[T_SIMDERR], 0, GD_KT, t19, 0);
-
+	/*stone's solution for lab3-B*/
 	wrmsr(0x174, GD_KT, 0);
    	wrmsr(0x175, KSTACKTOP, 0);
 	wrmsr(0x176, sysenter_handler, 0);

@@ -73,12 +73,32 @@ sys_map_kernel_page(void* kpage, void* va)
 	r = page_insert(curenv->env_pgdir, p, va, PTE_U | PTE_W);
 	return r;
 }
-
+/*stone's solution for lab3-B*/
+void
+sbrk(struct Env* e, size_t len)
+{
+	char* start = ROUNDDOWN(e->env_sbrk_pos - len, PGSIZE);
+	char* end = ROUNDUP(e->env_sbrk_pos, PGSIZE);
+	struct Page* p;
+	char* pos = start;
+	//cprintf("1\n");
+	for (; pos < end; pos += PGSIZE){
+		int r;
+		if (!(p = page_alloc(0)))
+			panic("env_alloc: page alloc failed\n");
+		else if ((r = page_insert(e->env_pgdir, p, (void*)pos, PTE_U | PTE_W | PTE_P)) < 0)
+			panic("env_alloc: %e\n", r);
+		//cprintf("2\n");
+	}
+	e->env_sbrk_pos = start;	
+}
 static int
 sys_sbrk(uint32_t inc)
 {
 	// LAB3: your code sbrk here...
-	return 0;
+	/*stone's solution for lab3-B*/
+	sbrk(curenv, inc);
+	return (int)curenv->env_sbrk_pos;
 }
 /*stone's solution for lab3-B*/
 void
@@ -111,6 +131,9 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 			break;
 		case SYS_map_kernel_page:
 			ret = sys_map_kernel_page((void*)a1, (void*)a2);
+			break;
+		case SYS_sbrk:
+			ret = sys_sbrk(a1);
 			break;
 		default:
 			break;

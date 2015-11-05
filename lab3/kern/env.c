@@ -277,7 +277,7 @@ env_alloc(struct Env **newenv_store, envid_t parent_id)
 // Pages should be writable by user and kernel.
 // Panic if any allocation attempt fails.
 //
-void
+static void
 region_alloc(struct Env *e, void *va, size_t len)
 {
 	// LAB 3: Your code here.
@@ -288,16 +288,20 @@ region_alloc(struct Env *e, void *va, size_t len)
 	//   You should round va down, and round (va + len) up.
 	//   (Watch out for corner-cases!)
 	/*stone's solution for lab3-A*/
+	/*stone's solution for lab3-B(modify)*/
 	char* va_start = ROUNDDOWN((char*)va, PGSIZE);
 	char* va_end = ROUNDUP((char*)(va + len), PGSIZE);
 	struct Page* p;
-	for (; va_start < va_end; va_start += PGSIZE){
+	char* pos = va_start;
+	for (; pos < va_end; pos += PGSIZE){
 		int r;
 		if (!(p = page_alloc(0)))
 			panic("env_alloc: page alloc failed\n");
-		else if ((r = page_insert(e->env_pgdir, p, (void*)va_start, PTE_U | PTE_W | PTE_P)) < 0)
+		else if ((r = page_insert(e->env_pgdir, p, (void*)pos, PTE_U | PTE_W | PTE_P)) < 0)
 			panic("env_alloc: %e\n", r);
 	}
+	//modify in partB
+	e->env_sbrk_pos = va_start;
 }
 
 //
