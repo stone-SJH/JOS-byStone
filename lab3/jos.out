@@ -5,9 +5,27 @@ check_page_installed_pgdir() succeeded!
 [00000000] new env 00001000
 env_run:00001000
 env_run:00001000
-start:eebfd000, end:eebfc000
-SBRK_TEST(ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKL)
-[00001000] exiting gracefully
+Incoming TRAP frame at 0xefbfffbc
+[00001000] user fault va f010000a ip 00800037
+TRAP frame at 0xf01b0000
+  edi  0x00000000
+  esi  0x00000000
+  ebp  0xeebfdfc8
+  oesp 0xefbfffdc
+  ebx  0x00000000
+  edx  0x00000000
+  ecx  0x00000000
+  eax  0xeec00000
+  es   0x----0023
+  ds   0x----0023
+  trap 0x0000000e Page Fault
+  cr2  0xf010000a
+  err  0x00000007 [user, write, protection]
+  eip  0x00800037
+  cs   0x----001b
+  flag 0x00000046
+  esp  0xeebfdfc8
+  ss   0x----0023
 [00001000] free env 00001000
 Destroyed the only environment - nothing more to do!
 Welcome to the JOS kernel monitor!

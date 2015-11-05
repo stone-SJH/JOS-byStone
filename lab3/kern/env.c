@@ -300,7 +300,6 @@ region_alloc(struct Env *e, void *va, size_t len)
 		else if ((r = page_insert(e->env_pgdir, p, (void*)pos, PTE_U | PTE_W | PTE_P)) < 0)
 			panic("env_alloc: %e\n", r);
 	}
-	//modify in partB
 	e->env_sbrk_pos = va_start;
 }
 
