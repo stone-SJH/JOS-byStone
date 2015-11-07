@@ -32,8 +32,16 @@ sgdt(struct Pseudodesc* gdtd)
 {
 	__asm __volatile("sgdt %0" :  "=m" (*gdtd));
 }
-
+char va[PGSIZE];
+struct Segdesc* entry;
+struct Segdesc duplicate;// save the origin state of GDT entry
 // Invoke a given function pointer with ring0 privilege, then return to ring3
+void tevil(){
+	evil();  
+	*entry = duplicate;  
+	asm volatile("popl %ebp");
+	asm volatile("lret");	
+}
 void ring0_call(void (*fun_ptr)(void)) {
     // Here's some hints on how to achieve this.
     // 1. Store the GDT descripter to memory (sgdt instruction)
@@ -49,6 +57,18 @@ void ring0_call(void (*fun_ptr)(void)) {
     //        file if necessary.
 
     // Lab3 : Your Code Here
+	/*stone's solution for lab3-B*/
+	struct Pseudodesc gdtd;
+	struct Segdesc* gdt;
+	sgdt(&gdtd);
+	if(sys_map_kernel_page((void*)gdtd.pd_base, (void*)va) < 0)
+		return;
+	gdt = (struct Segdesc*)((uint32_t)(PGNUM(va) << PTXSHIFT) + (uint32_t)PGOFF(gdtd.pd_base));
+	entry = gdt + (uint32_t)(GD_UD >> 3);
+	duplicate = *entry;
+	SETCALLGATE(*((struct Gatedesc*)entry), GD_KT, tevil, 3);
+	asm volatile("lcall $0x20, $0");
+
 }
 
 void
