@@ -33,7 +33,7 @@ static struct Command commands[] = {
 	{ "time", "Display the time of target commands", mon_time},
 	{ "c", "Continue execution from the current location", mon_c},
 	{ "x", "Display the memory", mon_x},
-	{ "si", "Executing the code instruction by instruction", mon_si}
+	{ "si", "Execute the code instruction by instruction", mon_si}
 };
 #define NCOMMANDS (sizeof(commands)/sizeof(commands[0]))
 
