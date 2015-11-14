@@ -90,6 +90,7 @@ trap_init(void)
 	SETGATE(idt[T_DIVIDE], 0, GD_KT, t0, 0);
 	SETGATE(idt[T_DEBUG], 0, GD_KT, t1, 0);
 	SETGATE(idt[T_NMI], 0, GD_KT, t2, 0);
+	/*stone's solution for lab3-B(modify)*/
 	SETGATE(idt[T_BRKPT], 0, GD_KT, t3, 3);
 	SETGATE(idt[T_OFLOW], 0, GD_KT, t4, 3);
 	SETGATE(idt[T_BOUND], 0, GD_KT, t5, 0);
