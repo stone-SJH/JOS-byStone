@@ -560,6 +560,8 @@ env_run(struct Env *e)
 		curenv->env_runs++;
 		lcr3(PADDR(curenv->env_pgdir));
 	}
+	/*stone's solution for lab4-A*/
+	unlock_kernel();
 	//2
 	env_pop_tf(&(curenv->env_tf));
 	//panic("env_run not yet implemented");

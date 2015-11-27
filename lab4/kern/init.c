@@ -23,13 +23,13 @@ void spinlock_test()
 {
 	int i;
 	volatile int interval = 0;
-
+	//cprintf("spinlock_test:\n");
 	/* BSP give APs some time to reach this point */
 	if (cpunum() == 0) {
 		while (interval++ < 10000)
 			asm volatile("pause");
 	}
-
+	//cprintf("done\n");
 	for (i=0; i<100; i++) {
 		lock_kernel();
 		if (test_ctr % 10000 != 0)
@@ -37,6 +37,7 @@ void spinlock_test()
 		interval = 0;
 		while (interval++ < 10000)
 			test_ctr++;
+		//cprintf("%d\n", i);
 		unlock_kernel();
 	}
 	lock_kernel();
@@ -91,7 +92,8 @@ i386_init(void)
 
 	// Acquire the big kernel lock before waking up APs
 	// Your code here:
-
+	/*stone's solution for lab4-A*/
+	lock_kernel();
 	// Starting non-boot CPUs
 	boot_aps();
 
@@ -181,7 +183,9 @@ mp_main(void)
 	// only one CPU can enter the scheduler at a time!
 	//
 	// Your code here:
-
+	/*stone's solution for lab4-A*/
+	lock_kernel();
+	sched_yield();
 	// Remove this after you finish Exercise 4
 	for (;;);
 }

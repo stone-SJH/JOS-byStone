@@ -6,8 +6,9 @@
 // After you implemented ticket_spinlock,
 // define USE_TICKET_SPIN_LOCK.
 // LAB 4: Your code here.
-
-//#define USE_TICKET_SPIN_LOCK
+/*stone's solution for lab4-A*/
+//please remove the comment when testing ticket_spin_lock
+#define USE_TICKET_SPIN_LOCK
 
 // Comment this to disable spinlock debugging
 #define DEBUG_SPINLOCK

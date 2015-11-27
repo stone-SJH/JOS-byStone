@@ -11,6 +11,7 @@
 #include <kern/syscall.h>
 #include <kern/console.h>
 #include <kern/sched.h>
+#include <kern/spinlock.h>
 
 // Print a string to the system console.
 // The string is exactly 'len' characters long.
@@ -310,8 +311,11 @@ sys_sbrk(uint32_t inc)
 /*stone's solution for lab3-B*/
 void
 router(struct Trapframe *tf){
+	lock_kernel();
 	curenv->env_tf = *tf;
+	tf = &curenv->env_tf;
 	tf->tf_regs.reg_eax = syscall(tf->tf_regs.reg_eax, tf->tf_regs.reg_edx, tf->tf_regs.reg_ecx, tf->tf_regs.reg_ebx, tf->tf_regs.reg_edi, 0);
+	env_run(curenv);
 }
 // Dispatches to the correct kernel function, passing the arguments.
 int32_t
