@@ -28,7 +28,8 @@
 #      symbols, rather than relying on the linker to fill them
 
 #define RELOC(x) ((x) - KERNBASE)
-#define MPBOOTPHYS(s) ((s) - mpentry_start + MPENTRY_PADDR)
+#stone
+#define MPBOOTPHYS(s) ((s) - mpentry_start + MPENTRY_PADDR) 
 
 .set PROT_MODE_CSEG, 0x8	# kernel code segment selector
 .set PROT_MODE_DSEG, 0x10	# kernel data segment selector
@@ -42,7 +43,7 @@ mpentry_start:
 	movw    %ax, %ds
 	movw    %ax, %es
 	movw    %ax, %ss
-
+#stone
 	lgdt    MPBOOTPHYS(gdtdesc)
 	movl    %cr0, %eax
 	orl     $CR0_PE, %eax

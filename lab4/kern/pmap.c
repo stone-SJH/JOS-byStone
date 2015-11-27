@@ -181,9 +181,9 @@ mem_init(void)
 
 	check_page_free_list(1);
 //<<<<<<< HEAD
-	//check_page_alloc();
-	//check_page();
-	//check_n_pages();
+	check_page_alloc();
+	check_page();
+	check_n_pages();
 
 //=======
 	//check_page_alloc();
@@ -267,7 +267,7 @@ mem_init(void)
 	// kern_pgdir wrong.
 	lcr3(PADDR(kern_pgdir));
 	//cprintf("1");
-	//check_page_free_list(0);
+	check_page_free_list(0);
 	//cprintf("1");
 	// entry.S set the really important flags in cr0 (including enabling
 	// paging).  Here we configure the rest of the flags that we care about.
@@ -308,7 +308,8 @@ mem_init_mp(void)
 	//     Permissions: kernel RW, user NONE
 	//
 	// LAB 4: Your code here:
-
+	/*stone's solution for lab4-A*/
+	
 }
 
 // --------------------------------------------------------------
@@ -349,7 +350,9 @@ page_init(void)
 	// free pages!
 	/*stone's solution for lab2*/
 	size_t i;
-	for (i = 1; i < npages_basemem; i++){
+	size_t mp = MPENTRY_PADDR / PGSIZE;
+	/*stone's solution for lab4-A(modify)*/
+	for (i = 1; i < npages_basemem && i != mp; i++){
 		pages[i].pp_ref = 0;
 		pages[i].pp_link = page_free_list;
 		page_free_list = &pages[i];
