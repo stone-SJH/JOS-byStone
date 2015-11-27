@@ -43,7 +43,6 @@ void spinlock_test()
 	cprintf("spinlock_test() succeeded on CPU %d!\n", cpunum());
 	unlock_kernel();
 }
-
 void
 i386_init(void)
 {
@@ -112,10 +111,10 @@ i386_init(void)
 //>>>>>>> lab3
 #if defined(TEST)
 	// Don't touch -- used by grading script!
-	ENV_CREATE(TEST, ENV_TYPE_USER);
+	//ENV_CREATE(TEST, ENV_TYPE_USER);
 #else
 	// Touch all you want.
-	ENV_CREATE(user_primes, ENV_TYPE_USER);
+	//ENV_CREATE(user_primes, ENV_TYPE_USER);
 #endif // TEST*
 
 //<<<<<<< HEAD
@@ -156,7 +155,7 @@ boot_aps(void)
 //=======
 	// We only have one user environment for now, so just run it.
 	//cprintf("4\n");
-	env_run(&envs[0]);
+	//env_run(&envs[0]);
 //>>>>>>> lab3
 }
 

@@ -181,21 +181,9 @@ mem_init(void)
 
 	check_page_free_list(1);
 //<<<<<<< HEAD
-	check_page_alloc();
-	check_page();
-	check_n_pages();
-
-//=======
 	//check_page_alloc();
 	//check_page();
 	//check_n_pages();
-	//check_realloc_npages();
-	//stone: when i did not finish ex5 i use this to test ex2
-	//check_page();
-	//stone:Q5 get real pages number
-	//cprintf("npages: %d\n", npages);
-	
-	//cprintf("1");
 //>>>>>>> lab3
 	//////////////////////////////////////////////////////////////////////
 	// Now we set up virtual memory
@@ -243,6 +231,7 @@ mem_init(void)
 	// we just set up the mapping anyway.
 	// Permissions: kernel RW, user NONE
 	// Your code goes here:
+	boot_map_region(kern_pgdir, KERNBASE, ROUNDUP(0xFFFFFFFF - KERNBASE, PGSIZE), 0, PTE_P | PTE_W);
 //<<<<<<< HEAD
 
 	// Initialize the SMP-related parts of the memory map
@@ -251,7 +240,7 @@ mem_init(void)
 //=======
 	/*stone's solution for lab2*/
 	//remapped physical memory
-	boot_map_region(kern_pgdir, KERNBASE, ROUNDUP(0xFFFFFFFF - KERNBASE, PGSIZE), 0, PTE_P | PTE_W);
+	
 	//cprintf("1");
 //>>>>>>> lab3
 	// Check that the initial page directory has been set up correctly.
@@ -285,6 +274,7 @@ mem_init(void)
 //   - Map the per-CPU stacks in the region [KSTACKTOP-PTSIZE, KSTACKTOP)
 // See the revised inc/memlayout.h
 //
+
 static void
 mem_init_mp(void)
 {
@@ -309,8 +299,15 @@ mem_init_mp(void)
 	//
 	// LAB 4: Your code here:
 	/*stone's solution for lab4-A*/
-	
+	size_t pos = KSTACKTOP - KSTKSIZE;
+	size_t gap = KSTKSIZE + KSTKGAP;
+	size_t i = 0;
+	for(; i < NCPU; i++){
+		boot_map_region(kern_pgdir, pos, KSTKSIZE, PADDR(percpu_kstacks[i]), PTE_P | PTE_W);
+		pos = pos - gap;
+	}
 }
+
 
 // --------------------------------------------------------------
 // Tracking of physical pages.
