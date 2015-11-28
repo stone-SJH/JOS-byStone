@@ -8,7 +8,7 @@
 // LAB 4: Your code here.
 /*stone's solution for lab4-A*/
 //please remove the comment when testing ticket_spin_lock
-#define USE_TICKET_SPIN_LOCK
+//#define USE_TICKET_SPIN_LOCK
 
 // Comment this to disable spinlock debugging
 #define DEBUG_SPINLOCK

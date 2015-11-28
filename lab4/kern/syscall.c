@@ -309,6 +309,7 @@ sys_sbrk(uint32_t inc)
 	return (int)curenv->env_sbrk_pos;
 }
 /*stone's solution for lab3-B*/
+/*stone's solution for lab4-A(modify)*/
 void
 router(struct Trapframe *tf){
 	lock_kernel();
@@ -345,6 +346,10 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 			break;
 		case SYS_sbrk:
 			ret = sys_sbrk(a1);
+			break;
+		/*stone's solution for lab4-A*/
+		case SYS_yield:
+			sys_yield();
 			break;
 		default:
 			break;
