@@ -548,7 +548,7 @@ env_run(struct Env *e)
 	// LAB 3: Your code here.
 	/*stone's solution for lab3-A*/
 	//1
-	if (curenv == NULL || curenv != e){
+	if (curenv != e){
 		//cprintf("env_run:%08x\n", e->env_id);
 		if (curenv && curenv->env_status == ENV_RUNNING)
 			curenv->env_status = ENV_RUNNABLE;
@@ -561,12 +561,11 @@ env_run(struct Env *e)
 		lcr3(PADDR(curenv->env_pgdir));
 	}
 	/*stone's solution for lab4-A*/
-	cprintf("4 start\n");
-	curenv->env_tf.tf_eflags |= FL_IF;
+	//cprintf("4 start\n");
 	unlock_kernel();
-	cprintf("4 end\n");
+	//cprintf("4 end\n");
 	//2
-	env_pop_tf(&(curenv->env_tf));
+	env_pop_tf(&curenv->env_tf);
 	cprintf("out env_run\n");
 	//panic("env_run not yet implemented");
 }

@@ -226,6 +226,12 @@ trap_dispatch(struct Trapframe *tf)
 {
 	// Handle processor exceptions.
 	// LAB 3: Your code here.
+	/*stone's solution for lab3-B*/
+	if (tf->tf_trapno == T_PGFLT)
+		page_fault_handler(tf);
+	if (tf->tf_trapno == T_DEBUG || tf->tf_trapno == T_BRKPT)
+		monitor(tf);
+	
 //<<<<<<< HEAD
 
 	// Handle spurious interrupts
@@ -242,12 +248,7 @@ trap_dispatch(struct Trapframe *tf)
 	// LAB 4: Your code here.
 
 //=======
-	/*stone's solution for lab3-B*/
-	if (tf->tf_trapno == T_PGFLT)
-		page_fault_handler(tf);
-	if (tf->tf_trapno == T_DEBUG || tf->tf_trapno == T_BRKPT)
-		monitor(tf);
-	
+
 //>>>>>>> lab3
 	// Unexpected trap: The user process or the kernel has a bug.
 	print_trapframe(tf);

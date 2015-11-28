@@ -66,8 +66,7 @@
 	TRAPHANDLER	(t17, T_ALIGN);
 	TRAPHANDLER_NOEC(t18, T_MCHK);
 	TRAPHANDLER_NOEC(t19, T_SIMDERR );
-
-
+	
 .globl sysenter_handler;
 .type sysenter_handler, @function;
 .align 2;
@@ -77,12 +76,12 @@ sysenter_handler:
  */
 /*stone's solution for lab3-B*/
 	//User Data
-	pushl $GD_UD
+	pushl $GD_UD|3
 	pushl %ebp
 	//flag registers
 	pushfl
 	//User Text
-	pushl $GD_UT
+	pushl $GD_UT|3
 	pushl %esi
 	pushl $0
 	pushl $0

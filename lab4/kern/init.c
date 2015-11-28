@@ -117,6 +117,9 @@ i386_init(void)
 #else
 	// Touch all you want.
 	ENV_CREATE(user_yield, ENV_TYPE_USER);
+	ENV_CREATE(user_yield, ENV_TYPE_USER);
+	ENV_CREATE(user_yield, ENV_TYPE_USER);
+	ENV_CREATE(user_yield, ENV_TYPE_USER);
 	cprintf("create done!\n");
 #endif // TEST*
 
