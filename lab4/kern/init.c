@@ -111,9 +111,10 @@ i386_init(void)
 //======
 	//cprintf("3\n");
 //>>>>>>> lab3
+	cprintf("start test\n");
 #if defined(TEST)
 	// Don't touch -- used by grading script!
-	//ENV_CREATE(TEST, ENV_TYPE_USER);
+	ENV_CREATE(TEST, ENV_TYPE_USER);
 #else
 	// Touch all you want.
 	ENV_CREATE(user_yield, ENV_TYPE_USER);
@@ -125,7 +126,7 @@ i386_init(void)
 
 //<<<<<<< HEAD
 	// Schedule and run the first user environment!
-	cprintf("start schedule!\n");	
+	//cprintf("start schedule!\n");	
 	sched_yield();
 }
 

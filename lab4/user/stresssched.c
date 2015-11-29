@@ -28,7 +28,6 @@ umain(int argc, char **argv)
 		for (j = 0; j < 10000; j++)
 			counter++;
 	}
-
 	if (counter != 10*10000)
 		panic("ran on two CPUs at once (counter is %d)", counter);
 
