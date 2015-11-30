@@ -448,8 +448,9 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 			ret = sys_page_alloc(a1, (void*)a2, a3);
 			break;
 		case SYS_page_map:
-			ret = sys_page_map((envid_t)*((uint32_t*)a1), (void*)*((uint32_t*)a1+1), 
-					(envid_t)*((uint32_t*)a1+2), (void*)*((uint32_t*)a1+3), (int)*((uint32_t*)a1+4));
+			/*stone: see lib/syscall.c for modification details*/
+			ret = sys_page_map(*((uint32_t*)a1), (void*)*((uint32_t*)a1 + 1), *((uint32_t*)a1 + 2), (void*)*((uint32_t*)a1 + 3), *((uint32_t*)a1 + 4));
+			//ret = sys_page_map(a1, (void*)a2, a3, (void*)a4, a5);
 			break;
 		case SYS_page_unmap:
 			ret = sys_page_unmap(a1, (void*)a2);

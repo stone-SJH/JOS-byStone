@@ -11,10 +11,8 @@ umain(int argc, char **argv)
 {
 	envid_t who;
 	int i;
-
 	// fork a child process
 	who = dumbfork();
-
 	// print a message and yield to the other a few times
 	for (i = 0; i < (who ? 10 : 20); i++) {
 		cprintf("%d: I am the %s!\n", i, who ? "parent" : "child");
@@ -61,16 +59,16 @@ dumbfork(void)
 		thisenv = &envs[ENVX(sys_getenvid())];
 		return 0;
 	}
-
+	cprintf("1\n");
 	// We're the parent.
 	// Eagerly copy our entire address space into the child.
 	// This is NOT what you should do in your fork implementation.
 	for (addr = (uint8_t*) UTEXT; addr < end; addr += PGSIZE)
 		duppage(envid, addr);
-
+	cprintf("2\n");
 	// Also copy the stack we are currently running on.
 	duppage(envid, ROUNDDOWN(&addr, PGSIZE));
-
+	cprintf("3\n");
 	// Start the child environment running
 	if ((r = sys_env_set_status(envid, ENV_RUNNABLE)) < 0)
 		panic("sys_env_set_status: %e", r);

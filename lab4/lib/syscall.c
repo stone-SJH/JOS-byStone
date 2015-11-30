@@ -3,7 +3,7 @@
 #include <inc/syscall.h>
 #include <inc/lib.h>
 
-static inline int32_t
+static int32_t
 syscall(int num, int check, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)
 {
 	int32_t ret;
@@ -91,7 +91,20 @@ sys_page_alloc(envid_t envid, void *va, int perm)
 int
 sys_page_map(envid_t srcenv, void *srcva, envid_t dstenv, void *dstva, int perm)
 {
-	return syscall(SYS_page_map, 1, srcenv, (uint32_t) srcva, dstenv, (uint32_t) dstva, perm);
+	/*stone's solution for lab4-A*/
+	/*ATTENTION!*/
+	/*stone: i got "PAGE FAULT" using the default parameter-passing function. and i have no idea about why this happened.
+		i have no way but find other's help by coping the code below using another method of parameter-passing to sys_page_map() function.
+		in my eyes these two method is the same but has different result.
+		sorry for no more explaination.*/
+	uint32_t pp_helper[5];
+	pp_helper[0] = (uint32_t) srcenv;
+	pp_helper[1] = (uint32_t) srcva;
+	pp_helper[2] = (uint32_t) dstenv;
+	pp_helper[3] = (uint32_t) dstva;
+	pp_helper[4] = (uint32_t) perm;
+	return syscall(SYS_page_map, 1, (uint32_t)pp_helper, 0, 0, 0, 0);
+	//return syscall(SYS_page_map, 1, (uint32_t) srcenv, (uint32_t) srcva, (uint32_t) dstenv, (uint32_t) dstva, (uint32_t) perm);
 }
 
 int

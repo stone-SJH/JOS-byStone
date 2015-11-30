@@ -86,6 +86,8 @@ void t18();
 void t19();
 /*stone's solution for lab3-B*/
 void sysenter_handler();
+/*stone's solution for lab4-A*/
+void user_syscall();
 
 void
 trap_init(void)
@@ -113,6 +115,8 @@ trap_init(void)
 	SETGATE(idt[T_ALIGN], 0, GD_KT, t17, 0);
 	SETGATE(idt[T_MCHK], 0, GD_KT, t18, 0);
 	SETGATE(idt[T_SIMDERR], 0, GD_KT, t19, 0);
+	/*stone's solution for lab4-A*/
+	SETGATE(idt[T_SYSCALL], 0, GD_KT, user_syscall, 3);
 	/*stone's solution for lab3-B*/
 	wrmsr(0x174, GD_KT, 0);
    	wrmsr(0x175, KSTACKTOP, 0);
@@ -231,6 +235,11 @@ trap_dispatch(struct Trapframe *tf)
 		page_fault_handler(tf);
 	if (tf->tf_trapno == T_DEBUG || tf->tf_trapno == T_BRKPT)
 		monitor(tf);
+	/*stone's solution for lab4-A*/
+	if (tf->tf_trapno == T_SYSCALL){
+		tf->tf_regs.reg_eax = syscall(tf->tf_regs.reg_eax, tf->tf_regs.reg_ebx, tf->tf_regs.reg_ecx, tf->tf_regs.reg_edx, tf->tf_regs.reg_esi, tf->tf_regs.reg_edi);
+		return;
+	}
 	
 //<<<<<<< HEAD
 

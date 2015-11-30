@@ -66,6 +66,8 @@
 	TRAPHANDLER	(t17, T_ALIGN);
 	TRAPHANDLER_NOEC(t18, T_MCHK);
 	TRAPHANDLER_NOEC(t19, T_SIMDERR );
+	/*stone's solution for lab4-A*/
+	TRAPHANDLER_NOEC(user_syscall, T_SYSCALL);
 	
 .globl sysenter_handler;
 .type sysenter_handler, @function;

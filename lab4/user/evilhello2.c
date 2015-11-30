@@ -5,10 +5,6 @@
 #include <inc/mmu.h>
 #include <inc/x86.h>
 
-char vaddr[PGSIZE];
-struct Segdesc old;
-struct Segdesc *gdt;
-struct Segdesc *entry;
 
 // Call this function with ring0 privilege
 void evil()
@@ -31,21 +27,21 @@ void evil()
 	outb(0x3f8, '\n');
 }
 
-void call_fun_ptr()
+static void
+sgdt(struct Pseudodesc* gdtd)
 {
+	__asm __volatile("sgdt %0" :  "=m" (*gdtd));
+}
+char va[PGSIZE];
+struct Segdesc* entry;
+struct Segdesc duplicate;// save the origin state of GDT entry
+// Invoke a given function pointer with ring0 privilege, then return to ring3
+void tevil(){
 	evil();  
-	*entry = old;  
+	*entry = duplicate;  
 	asm volatile("popl %ebp");
 	asm volatile("lret");	
 }
-
-static void
-get_gdt(struct Pseudodesc* r_gdt)
-{
-	__asm __volatile("sgdt %0" :  "=m" (*r_gdt));
-}
-
-// Invoke a given function pointer with ring0 privilege, then return to ring3
 void ring0_call(void (*fun_ptr)(void)) {
     // Here's some hints on how to achieve this.
     // 1. Store the GDT descripter to memory (sgdt instruction)
@@ -61,31 +57,24 @@ void ring0_call(void (*fun_ptr)(void)) {
     //        file if necessary.
 
     // Lab3 : Your Code Here
-
-    struct Pseudodesc r_gdt; 
-	get_gdt(&r_gdt);
-
-	int t = sys_map_kernel_page((void* )r_gdt.pd_base, (void* )vaddr);
-	if (t < 0) {
-		cprintf("ring0_call: sys_map_kernel_page failed, %e\n", t);
-	}
-
-	uint32_t base = (uint32_t)(PGNUM(vaddr) << PTXSHIFT);
-	uint32_t index = GD_UD >> 3;
-	uint32_t offset = PGOFF(r_gdt.pd_base);
-
-	gdt = (struct Segdesc*)(base+offset); 
-	entry = gdt + index; 
-	old= *entry; 
-
-	SETCALLGATE(*((struct Gatedesc*)entry), GD_KT, call_fun_ptr, 3);
+	/*stone's solution for lab3-B*/
+	struct Pseudodesc gdtd;
+	struct Segdesc* gdt;
+	sgdt(&gdtd);
+	if(sys_map_kernel_page((void*)gdtd.pd_base, (void*)va) < 0)
+		return;
+	gdt = (struct Segdesc*)((uint32_t)(PGNUM(va) << PTXSHIFT) + (uint32_t)PGOFF(gdtd.pd_base));
+	entry = gdt + (uint32_t)(GD_UD >> 3);
+	duplicate = *entry;
+	SETCALLGATE(*((struct Gatedesc*)entry), GD_KT, tevil, 3);
 	asm volatile("lcall $0x20, $0");
+
 }
 
 void
 umain(int argc, char **argv)
 {
-    // call the evil function in ring0
+        // call the evil function in ring0
 	ring0_call(&evil);
 
 	// call the evil function in ring3
