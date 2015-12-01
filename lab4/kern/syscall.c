@@ -153,12 +153,15 @@ static int
 sys_env_set_pgfault_upcall(envid_t envid, void *func)
 {
 	// LAB 4: Your code here.
-	/*stone's solution for lab4-A*/
+	/*stone's solution for lab4-B*/
+	/*stone: well, i thought it was done in partA and just did not show off in the homepage..
+		but it does not matter cuz so ez that just can be done with the hint.*/
 	//panic("sys_env_set_pgfault_upcall not implemented");
 	struct Env* e;
 	int r;
 	if ((r = envid2env(envid, &e, 1)) < 0)
 		return r;
+	//cprintf("sys_env_set_pgfault_upcall:\n");
 	e->env_pgfault_upcall = func;
 	return 0;
 }
@@ -362,7 +365,6 @@ sys_ipc_recv(void *dstva)
 	return 0;
 }
 
-//=======
 /*stone's solution for lab3-B*/
 void
 sbrk(struct Env* e, size_t len)
@@ -382,7 +384,6 @@ sbrk(struct Env* e, size_t len)
 	}
 	e->env_sbrk_pos = start;	
 }
-//>>>>>>> lab3
 static int
 sys_sbrk(uint32_t inc)
 {
@@ -442,10 +443,10 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 			ret = sys_env_set_status(a1, a2);
 			break;
 		case SYS_env_set_pgfault_upcall:
-			ret = sys_env_set_pgfault_upcall(a1, (void*)a2);
+			ret = sys_env_set_pgfault_upcall((envid_t)a1, (void*)a2);
 			break;
 		case SYS_page_alloc:
-			ret = sys_page_alloc(a1, (void*)a2, a3);
+			ret = sys_page_alloc((envid_t)a1, (void*)a2, (int)a3);
 			break;
 		case SYS_page_map:
 			/*stone: see lib/syscall.c for modification details*/

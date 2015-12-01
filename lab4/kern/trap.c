@@ -240,8 +240,6 @@ trap_dispatch(struct Trapframe *tf)
 		tf->tf_regs.reg_eax = syscall(tf->tf_regs.reg_eax, tf->tf_regs.reg_ebx, tf->tf_regs.reg_ecx, tf->tf_regs.reg_edx, tf->tf_regs.reg_esi, tf->tf_regs.reg_edi);
 		return;
 	}
-	
-//<<<<<<< HEAD
 
 	// Handle spurious interrupts
 	// The hardware sometimes raises these because of noise on the
@@ -256,9 +254,6 @@ trap_dispatch(struct Trapframe *tf)
 	// interrupt using lapic_eoi() before calling the scheduler!
 	// LAB 4: Your code here.
 
-//=======
-
-//>>>>>>> lab3
 	// Unexpected trap: The user process or the kernel has a bug.
 	print_trapframe(tf);
 	if (tf->tf_cs == GD_KT)
@@ -373,8 +368,27 @@ page_fault_handler(struct Trapframe *tf)
 	//   (the 'tf' variable points at 'curenv->env_tf').
 
 	// LAB 4: Your code here.
+	/*stone's solution for lab4-B*/
+	if (curenv->env_pgfault_upcall != NULL){
+		//cprintf("page_fault_handler:\n");
+		struct UTrapframe* utf;
+		if (UXSTACKTOP - PGSIZE <= tf->tf_esp && tf->tf_esp < UXSTACKTOP)
+			utf = (struct UTrapframe*)(tf->tf_esp - sizeof(struct UTrapframe) - 4);
+		else
+			utf = (struct UTrapframe*)(UXSTACKTOP - sizeof(struct UTrapframe));
+		user_mem_assert(curenv, (void*)utf, sizeof(struct UTrapframe), PTE_U | PTE_W);
+		utf->utf_fault_va = fault_va;
+		utf->utf_err = tf->tf_err;
+		utf->utf_regs = tf->tf_regs;
+		utf->utf_eip = tf->tf_eip;
+		utf->utf_eflags = tf->tf_eflags;
+		utf->utf_esp = tf->tf_esp;
 
-	// Destroy the environment that caused the fault.
+		curenv->env_tf.tf_eip = (uint32_t)curenv->env_pgfault_upcall;
+		curenv->env_tf.tf_esp = (uint32_t)utf;
+		env_run(curenv);
+	} 
+	//Destroy the environment that caused the fault.
 	cprintf("[%08x] user fault va %08x ip %08x\n",
 		curenv->env_id, fault_va, tf->tf_eip);
 	print_trapframe(tf);
