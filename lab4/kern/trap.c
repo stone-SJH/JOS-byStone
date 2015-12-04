@@ -88,6 +88,23 @@ void t19();
 void sysenter_handler();
 /*stone's solution for lab4-A*/
 void user_syscall();
+/*stone's solution for lab4-C*/
+void i0();
+void i1();
+void i2();
+void i3();
+void i4();
+void i5();
+void i6();
+void i7();
+void i8();
+void i9();
+void i10();
+void i11();
+void i12();
+void i13();
+void i14();
+void i15();
 
 void
 trap_init(void)
@@ -117,6 +134,23 @@ trap_init(void)
 	SETGATE(idt[T_SIMDERR], 0, GD_KT, t19, 0);
 	/*stone's solution for lab4-A*/
 	SETGATE(idt[T_SYSCALL], 0, GD_KT, user_syscall, 3);
+	/*stone's solution for lab4-C*/
+	SETGATE(idt[IRQ_OFFSET], 0, GD_KT, i0, 0);
+	SETGATE(idt[IRQ_OFFSET + 1], 0, GD_KT, i1, 0);
+	SETGATE(idt[IRQ_OFFSET + 2], 0, GD_KT, i2, 0);
+	SETGATE(idt[IRQ_OFFSET + 3], 0, GD_KT, i3, 0);
+	SETGATE(idt[IRQ_OFFSET + 4], 0, GD_KT, i4, 0);
+	SETGATE(idt[IRQ_OFFSET + 5], 0, GD_KT, i5, 0);
+	SETGATE(idt[IRQ_OFFSET + 6], 0, GD_KT, i6, 0);
+	SETGATE(idt[IRQ_OFFSET + 7], 0, GD_KT, i7, 0);
+	SETGATE(idt[IRQ_OFFSET + 8], 0, GD_KT, i8, 0);
+	SETGATE(idt[IRQ_OFFSET + 9], 0, GD_KT, i9, 0);
+	SETGATE(idt[IRQ_OFFSET + 10], 0, GD_KT, i10, 0);
+	SETGATE(idt[IRQ_OFFSET + 11], 0, GD_KT, i11, 0);
+	SETGATE(idt[IRQ_OFFSET + 12], 0, GD_KT, i12, 0);
+	SETGATE(idt[IRQ_OFFSET + 13], 0, GD_KT, i13, 0);
+	SETGATE(idt[IRQ_OFFSET + 14], 0, GD_KT, i14, 0);
+	SETGATE(idt[IRQ_OFFSET + 15], 0, GD_KT, i15, 0);
 	/*stone's solution for lab3-B*/
 	wrmsr(0x174, GD_KT, 0);
    	wrmsr(0x175, KSTACKTOP, 0);
