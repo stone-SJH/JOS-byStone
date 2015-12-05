@@ -492,6 +492,7 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 		case SYS_page_unmap:
 			ret = sys_page_unmap(a1, (void*)a2);
 			break;
+		/*stone's solution for lab4-C*/
 		case SYS_ipc_recv:
 			ret = sys_ipc_recv((void*)a1);
 			break;
