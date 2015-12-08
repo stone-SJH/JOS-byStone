@@ -1,0 +1,85 @@
++ cc kern/init.c
++ ld obj/kern/kernel
++ mk obj/kern/kernel.img
+'qemu-system-i386' -hda obj/kern/kernel.img -serial mon:stdio -gdb tcp::26000 -D qemu.log -smp 1 
+QEMU 1.5.2 monitor - type 'help' for more information
+(qemu) 
+6828 decimal is XXX octal!
+Physical memory: 66556K available, base = 640K, extended = 65532K
+check_kern_pgdir() succeeded!
+check_page_installed_pgdir() succeeded!
+SMP: CPU 0 found 1 CPU(s)
+enabled interrupts: 1 2
+[00000000] new env 00001000
+[00000000] new env 00001001
+[00000000] new env 00001002
+[00000000] new env 00001003
+[00000000] new env 00001004
+[00000000] new env 00001005
+[00000000] new env 00001006
+[00000000] new env 00001007
+start test
+[00000000] new env 00001008
+1008: I am ''
+[00001008] new env 00001009
+[00001008] new env 0000100a
+1009: I am '0'
+[00001009] new env 0000100b
+[00001008] exiting gracefully
+[00001008] free env 00001008
+100a: I am '1'
+[0000100a] new env 00002008
+[0000100a] new env 0000100c
+2008: I am '10'
+[00002008] new env 0000100d
+[00002008] new env 0000100e
+[00001009] new env 0000100f
+[00001009] exiting gracefully
+[00001009] free env 00001009
+[0000100a] exiting gracefully
+[0000100a] free env 0000100a
+[00002008] exiting gracefully
+[00002008] free env 00002008
+100b: I am '00'
+[0000100b] new env 00003008
+100c: I am '11'
+[0000100c] new env 0000200a
+[0000100c] new env 00002009
+100d: I am '100'
+[0000100d] exiting gracefully
+[0000100d] free env 0000100d
+200a: I am '110'
+[0000200a] exiting gracefully
+[0000200a] free env 0000200a
+[0000100b] new env 0000300a
+[0000100c] exiting gracefully
+[0000100c] free env 0000100c
+3008: I am '000'
+2009: I am '111'
+[00002009] exiting gracefully
+[00002009] free env 00002009
+[00003008] exiting gracefully
+[00003008] free env 00003008
+100e: I am '101'
+[0000100e] exiting gracefully
+[0000100e] free env 0000100e
+[0000100b] exiting gracefully
+[0000100b] free env 0000100b
+300a: I am '001'
+[0000300a] exiting gracefully
+[0000300a] free env 0000300a
+100f: I am '01'
+[0000100f] new env 0000400a
+[0000100f] new env 0000200b
+400a: I am '010'
+[0000400a] exiting gracefully
+[0000400a] free env 0000400a
+[0000100f] exiting gracefully
+[0000100f] free env 0000100f
+200b: I am '011'
+[0000200b] exiting gracefully
+[0000200b] free env 0000200b
+No more runnable environments!
+Welcome to the JOS kernel monitor!
+Type 'help' for a list of commands.
+K> 
