@@ -138,9 +138,54 @@ fork(void)
 }
 
 // Challenge!
+/*stone's solution for lab4-Challenge*/
+static int
+sduppage(envid_t envid, unsigned pn, int cow)
+{
+	int r;
+	void* addr = (void*)(pn * PGSIZE);
+	if (cow || (vpt[VPN(addr)] & PTE_COW)){
+		if ((r = sys_page_map(0, addr, envid, addr, PTE_P | PTE_COW | PTE_U)) < 0)
+			panic("child-mapping fault:%e\n", r);
+		if ((r = sys_page_map(0, addr, 0, addr, PTE_P | PTE_COW | PTE_U)) < 0)
+			panic("own-mapping fault:%e\n", r);
+	}
+	else if (vpt[VPN(addr)] & PTE_W){
+		if ((r = sys_page_map(0, addr, envid, addr, PTE_P | PTE_U | PTE_W)) < 0)
+			panic("child-mapping fault:%e\n", r);
+	}
+	else {	
+		if ((r = sys_page_map(0, addr, envid, addr, PTE_P | PTE_U)) < 0)
+			panic("genuine RO pages fault:%e\n", r);	
+	}
+	return 0;
+}
 int
 sfork(void)
 {
-	panic("sfork not implemented");
-	return -E_INVAL;
+	int r;
+	set_pgfault_handler(pgfault);
+	envid_t envid = sys_exofork();
+	if (envid < 0)
+		panic("sys_exofork() error!\n");
+	if (envid == 0){
+		thisenv = &envs[ENVX(sys_getenvid())];
+		return 0;	
+	}
+	uint32_t addr;
+	if (envid > 0){
+		int stack_cow = 1;
+		for (addr = USTACKTOP - PGSIZE; addr >= UTEXT; addr -= PGSIZE){
+			if (((vpd[VPD(addr)] & PTE_P) > 0) && ((vpt[VPN(addr)] & PTE_P) > 0) && ((vpt[VPN(addr)] & PTE_U) > 0))
+				sduppage(envid, VPN(addr), stack_cow);
+			else stack_cow = 0;
+		}
+		if ((r = sys_page_alloc(envid, (void *)(UXSTACKTOP - PGSIZE), PTE_U | PTE_W | PTE_P)) < 0)
+			panic("child-page alloc fault:%e\n", r);
+		if ((r = sys_env_set_pgfault_upcall(envid, _pgfault_upcall)) < 0)
+			panic("child-set pgfault upcall fault:%e\n", r);
+		if ((r = sys_env_set_status(envid, ENV_RUNNABLE)) < 0)
+			panic("child-set env status fault:%e\n");
+	}
+	return envid;	
 }

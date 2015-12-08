@@ -116,12 +116,17 @@ i386_init(void)
 	// Don't touch -- used by grading script!
 	ENV_CREATE(TEST, ENV_TYPE_USER);
 #else
-	// Touch all you want.
-	ENV_CREATE(user_idle, ENV_TYPE_USER);
-	ENV_CREATE(user_yield, ENV_TYPE_USER);
-	ENV_CREATE(user_yield, ENV_TYPE_USER);
-	ENV_CREATE(user_yield, ENV_TYPE_USER);
-	cprintf("create done!\n");
+	// Touch all you want
+	/*stone's solution for lab4*/
+	/*stone: if you want to test Round-Robin Schedule, PLZ remove the comment below*/
+	//ENV_CREATE(user_idle, ENV_TYPE_USER);
+	//ENV_CREATE(user_yield, ENV_TYPE_USER);
+	//ENV_CREATE(user_yield, ENV_TYPE_USER);
+	//ENV_CREATE(user_yield, ENV_TYPE_USER);
+	//cprintf("create done!\n");
+	/*stone: if you want to test sfork() for challenge, PLZ remove the comment below*/
+	ENV_CREATE(user_sforkcheck, ENV_TYPE_USER);
+	ENV_CREATE(user_sforktree, ENV_TYPE_USER);
 #endif // TEST*
 
 //<<<<<<< HEAD
