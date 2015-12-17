@@ -49,8 +49,15 @@ bc_pgfault(struct UTrapframe *utf)
 	// the page dirty).
 	//
 	// LAB 5: Your code here
-	panic("bc_pgfault not implemented");
+	//panic("bc_pgfault not implemented");
+	/*stone's solution for lab5*/
+	addr = ROUNDDOWN(addr, PGSIZE);
+	if ((r = sys_page_alloc(0, addr, PTE_W | PTE_U | PTE_P)) < 0)
+		panic("can not alloc a new page in %08x\n", (uint32_t)addr);
 
+	uint32_t secno = blockno * BLKSECTS;
+	if ((r = ide_read(secno, addr, BLKSECTS)) < 0)
+		panic("reading non-existent sector %08x\n", secno);
 	// Check that the block we read was allocated. (exercise for
 	// the reader: why do we do this *after* reading the block
 	// in?)
@@ -74,7 +81,17 @@ flush_block(void *addr)
 		panic("flush_block of bad va %08x", addr);
 
 	// LAB 5: Your code here.
-	panic("flush_block not implemented");
+	//panic("flush_block not implemented");
+	/*stone's solution for lab5*/
+	addr = ROUNDDOWN(addr, PGSIZE);
+	int r;
+	if (va_is_mapped(addr) && va_is_dirty(addr)){
+		uint32_t secno = blockno * BLKSECTS;
+		if ((r = ide_write(secno, addr, BLKSECTS)) < 0)
+			panic("can not write to sector %08x", secno);
+		if ((r = sys_page_map(0, addr, 0, addr, PTE_SYSCALL)) < 0)
+			panic("can not remap the page in %08x", (uint32_t)addr);
+	}
 }
 
 // Test that the block cache works, by smashing the superblock and
