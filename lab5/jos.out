@@ -1,0 +1,225 @@
+6828 decimal is XXX octal!
+Physical memory: 66556K available, base = 640K, extended = 65532K
+check_kern_pgdir() succeeded!
+check_page_installed_pgdir() succeeded!
+SMP: CPU 0 found 1 CPU(s)
+enabled interrupts: 1 2
+[00000000] new env 00001000
+[00000000] new env 00001001
+[00000000] new env 00001002
+[00000000] new env 00001003
+[00000000] new env 00001004
+[00000000] new env 00001005
+[00000000] new env 00001006
+[00000000] new env 00001007
+[00000000] new env 00001008
+[00000000] new env 00001009
+env_run:00001000
+env_run:00001000
+env_run:00001008
+env_run:00001008
+FS is running
+FS can do I/O
+Device 1 presence: 1
+block cache is good
+superblock is good
+bitmap is good
+env_run:00001009
+env_run:00001009
+icode startup
+icode: open /motd
+env_run:00001008
+env_run:00001008
+alloc_block is good
+file_open is good
+file_get_block is good
+file_flush is good
+file_truncate is good
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+file rewrite is good
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+icode: read /motd
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+This is /motd, the message of the day.
+
+Welcome to the JOS kernel, now with a file system!
+
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+icode: close /motd
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+icode: spawn /init
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+[00001009] new env 0000100a
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+env_run:00001008
+env_run:00001008
+env_run:00001009
+env_run:00001009
+[00001009] user panic in icode at lib/spawn.c:128: sys_env_set_trapframe: invalid parameter
+Welcome to the JOS kernel monitor!
+Type 'help' for a list of commands.
+TRAP frame at 0xf024e480 from CPU 0
+  edi  0x00005000
+  esi  0xeebfdab4
+  ebp  0xeebfdaa0
+  oesp 0xefbfffdc
+  ebx  0x008023e0
+  edx  0x00000000
+  ecx  0x00000001
+  eax  0x00000001
+  es   0x----0023
+  ds   0x----0023
+  trap 0x00000003 Breakpoint
+  err  0x00000000
+  eip  0x0080021c
+  cs   0x----001b
+  flag 0x00000246
+  esp  0xeebfda78
+  ss   0x----0023
