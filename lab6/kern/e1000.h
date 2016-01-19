@@ -1,25 +1,26 @@
 #ifndef JOS_KERN_E1000_H
 #define JOS_KERN_E1000_H
-
+/*stone's solution for lab6-A*/
 #include <kern/pci.h>
 
-/*stone's solution for lab6-A PCI attach*/
+uint32_t *volatile e1000;
+
+#define E1000_ADDR	KSTACKTOP 
+
+
 // 82540EM Desktop ID
 #define E1000_VENDOR_ID 0x8086
 #define E1000_DEVICE_ID 0x100e
-
-/*stone's solution for lab6-A MMIO mapping*/
-#define E1000_ADDR   KSTACKTOP 
-//for testing
-#define E1000_STATUS (0x0008 / 4)
-uint32_t *volatile e1000;
-
 
 #define E1000_NTXDESC  64
 #define E1000_NRCVDESC 128
 
 #define E1000_TX_PKT_LEN  1518
 #define E1000_RCV_PKT_LEN 2048
+
+
+// Registers, divided by four for indexing purposes
+#define E1000_STATUS (0x0008 / 4)
 
 // TX Descriptors and Flags
 #define E1000_TDBAL (0x3800 / 4) // Base Address Low

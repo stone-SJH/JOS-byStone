@@ -41,18 +41,14 @@ e1000_mem_init(void)
 int
 e1000_attach(struct pci_func *pcif)
 {
-	/*stone's solution for lab6-A PCI attach*/
 	pci_func_enable(pcif);
-
 	e1000_mem_init();
 
 	// Sanity check
 	static_assert(sizeof(struct tx_desc) == 16 && sizeof(struct rcv_desc) == 16);
-	/*stone's solution for lab6-A MMIO mapping*/
+
 	boot_map_region(kern_pgdir, E1000_ADDR, pcif->reg_size[0], pcif->reg_base[0], PTE_PCD | PTE_PWT | PTE_W);
 	e1000 = (uint32_t*)E1000_ADDR;
-	//here output "testing:80080783"
-	//cprintf("testing: %08x\n",e1000[E1000_STATUS]);	
 
 	e1000[E1000_TDBAL] = PADDR(tx_queue);
 	e1000[E1000_TDBAH] = 0;
@@ -79,6 +75,8 @@ e1000_attach(struct pci_func *pcif)
 	e1000[E1000_FILTER_RAH] = 0x00005634;
 	e1000[E1000_FILTER_RAH] |= E1000_FILTER_RAH_VALID;
 
+	//cprintf("Ethernet Address: 0x%08x%08x\n", e1000[E1000_FILTER_RAH], e1000[E1000_FILTER_RAL]);
+
 	// Setup RCV Registers
 	e1000[E1000_RDBAL] = PADDR(rcv_queue);
 	e1000[E1000_RDBAH] = 0;
@@ -103,12 +101,14 @@ e1000_transmit(uint8_t *data, uint32_t len)
 {
 	if (len > E1000_TX_PKT_LEN)
 	{
+		//cprintf("e1000_transmit: too long\n");
 		return -E_LONG_PKT;
 	}
 
 	uint32_t tdt = e1000[E1000_TDT];
 	if ((tx_queue[tdt].status & E1000_TDESC_STATUS_DD) == 0)
 	{
+		//cprintf("e1000_transmit: full\n");
 		return -E_FULL_TX;
 	}
 
