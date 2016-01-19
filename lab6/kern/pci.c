@@ -51,7 +51,7 @@ pci_conf1_set_addr(uint32_t bus,
 		(bus << 16) | (dev << 11) | (func << 8) | (offset);
 	outl(pci_conf1_addr_ioport, v);
 }
-
+//read and write specific config
 static uint32_t
 pci_conf_read(struct pci_func *f, uint32_t off)
 {
@@ -253,6 +253,6 @@ pci_init(void)
 {
 	static struct pci_bus root_bus;
 	memset(&root_bus, 0, sizeof(root_bus));
-
+	//e1000 in bus0
 	return pci_scan_bus(&root_bus);
 }

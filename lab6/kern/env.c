@@ -556,13 +556,13 @@ env_run(struct Env *e)
 	/*stone's solution for lab3-A*/
 	//1
 	if (curenv != e){
-		cprintf("env_run:%08x\n", e->env_id);
+		//cprintf("env_run:%08x\n", e->env_id);
 		if (curenv && curenv->env_status == ENV_RUNNING)
 			curenv->env_status = ENV_RUNNABLE;
 		//may be others
 		//if()
 		curenv = e;
-		cprintf("env_run:%08x\n", curenv->env_id);
+		//cprintf("env_run:%08x\n", curenv->env_id);
 		curenv->env_status = ENV_RUNNING;
 		curenv->env_runs++;
 		lcr3(PADDR(curenv->env_pgdir));
@@ -575,7 +575,7 @@ env_run(struct Env *e)
 	//cprintf("4 end\n");
 	//2
 	env_pop_tf(&curenv->env_tf);
-	cprintf("out env_run\n");
+	//cprintf("out env_run\n");
 	//panic("env_run not yet implemented");
 }
 

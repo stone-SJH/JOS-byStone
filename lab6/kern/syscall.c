@@ -16,6 +16,8 @@
 //=======
 #include <kern/spinlock.h>
 //>>>>>>> new_lab5
+#include <kern/e1000.h>
+
 
 // Print a string to the system console.
 // The string is exactly 'len' characters long.
@@ -479,6 +481,27 @@ sys_time_msec(void)
 	return time_msec();
 }
 
+/*stone's solution for lab6-A*/
+static int
+sys_transmit(uint8_t *data, uint32_t len){
+	if ((uintptr_t) data >= UTOP)
+		return -E_INVAL;
+	else
+  		return e1000_transmit(data, len);
+}
+/*stone's solution for lab6-B*/
+static int
+sys_receive(uint8_t *data, uint32_t *len){
+ 	if ((uintptr_t) data >= UTOP)
+		return -E_INVAL;
+
+  	int ret = e1000_receive(data);
+	if (ret > 0){
+    		*len = ret;
+    		ret = 0;
+	}
+	return ret;
+}
 
 //=======
 //>>>>>>> new_lab5
@@ -549,6 +572,12 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 		/*stone's solution for lab6-A*/
 		case SYS_time_msec:
 			ret = sys_time_msec();
+			break;
+		case SYS_transmit:
+			ret = sys_transmit((uint8_t*)a1, (uint32_t)a2);
+			break;
+		case SYS_receive:
+			ret = sys_receive((uint8_t*)a1, (uint32_t*)a2);
 			break;
 		default:
 			break;

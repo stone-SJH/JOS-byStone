@@ -7,21 +7,12 @@
 #include <inc/assert.h>
 #include <inc/error.h>
 #include <kern/pmap.h>
-
-struct tx_desc tx_queue[E1000_NTXDESC] __attribute__((aligned(16)));
-struct tx_pkt  tx_pkt_buf[E1000_NTXDESC];
-
-struct rcv_desc rcv_queue[E1000_NRCVDESC] __attribute__((aligned(16)));
-struct rcv_pkt  rcv_pkt_buf[E1000_NRCVDESC];
-
-struct rcv_desc rcv_queue[E1000_NRCVDESC] __attribute__((aligned(16)));
-
 static void
 e1000_mem_init(void)
 {
 	int i;
 	// Initialize the packet buffers
-	memset(tx_queue, 0x00, sizeof(struct tx_desc) * E1000_NTXDESC);
+	memset(tx_queue, 0x00, sizeof(struct e1000_tx_desc) * E1000_NTXDESC);
 	memset(tx_pkt_buf, 0x00, sizeof(struct tx_pkt) * E1000_NTXDESC);
 	// Give each descriptor an address, and mark them writable
 	for (i = 0; i < E1000_NTXDESC; i++)
@@ -30,29 +21,32 @@ e1000_mem_init(void)
 		tx_queue[i].status |= E1000_TDESC_STATUS_DD;
 	}
 
-	memset(rcv_queue, 0x00, sizeof(struct rcv_desc) * E1000_NRCVDESC);
-	memset(rcv_pkt_buf, 0x00, sizeof(struct rcv_pkt) * E1000_NRCVDESC);
-	for (i = 0; i < E1000_NRCVDESC; i++)
+	memset(rx_queue, 0x00, sizeof(struct e1000_rx_desc) * E1000_NRXDESC);
+	memset(rx_pkt_buf, 0x00, sizeof(struct rx_pkt) * E1000_NRXDESC);
+	for (i = 0; i < E1000_NRXDESC; i++)
 	{
-		rcv_queue[i].addr = PADDR(rcv_pkt_buf[i].pkt);
+		rx_queue[i].addr = PADDR(rx_pkt_buf[i].pkt);
 	}
 }
 
 int
-e1000_attach(struct pci_func *pcif)
-{
+e1000_attach(struct pci_func *pcif){
+	/*stone's solution for lab6-A PCI attach*/
 	pci_func_enable(pcif);
+
 	e1000_mem_init();
 
 	// Sanity check
-	static_assert(sizeof(struct tx_desc) == 16 && sizeof(struct rcv_desc) == 16);
-
+	static_assert(sizeof(struct e1000_tx_desc) == 16 && sizeof(struct e1000_rx_desc) == 16);
+	/*stone's solution for lab6-A MMIO mapping*/
 	boot_map_region(kern_pgdir, E1000_ADDR, pcif->reg_size[0], pcif->reg_base[0], PTE_PCD | PTE_PWT | PTE_W);
 	e1000 = (uint32_t*)E1000_ADDR;
+	//here output "testing:80080783"
+	//cprintf("testing: %08x\n",e1000[E1000_STATUS]);	
 
 	e1000[E1000_TDBAL] = PADDR(tx_queue);
 	e1000[E1000_TDBAH] = 0;
-	e1000[E1000_TDLEN] = sizeof(struct tx_desc) * E1000_NTXDESC;
+	e1000[E1000_TDLEN] = sizeof(struct e1000_tx_desc) * E1000_NTXDESC;
 	e1000[E1000_TDH]   = 0;
 	e1000[E1000_TDT]   = 0;
 
@@ -75,12 +69,10 @@ e1000_attach(struct pci_func *pcif)
 	e1000[E1000_FILTER_RAH] = 0x00005634;
 	e1000[E1000_FILTER_RAH] |= E1000_FILTER_RAH_VALID;
 
-	//cprintf("Ethernet Address: 0x%08x%08x\n", e1000[E1000_FILTER_RAH], e1000[E1000_FILTER_RAL]);
-
-	// Setup RCV Registers
-	e1000[E1000_RDBAL] = PADDR(rcv_queue);
+	// Setup RX Registers
+	e1000[E1000_RDBAL] = PADDR(rx_queue);
 	e1000[E1000_RDBAH] = 0;
-	e1000[E1000_RDLEN] = sizeof(struct rcv_desc) * E1000_NRCVDESC;
+	e1000[E1000_RDLEN] = sizeof(struct e1000_rx_desc) * E1000_NRXDESC;
 	e1000[E1000_RDH]   = 1;
 	e1000[E1000_RDT]   = 0; // Gets reset later
 
@@ -93,22 +85,17 @@ e1000_attach(struct pci_func *pcif)
 	e1000[E1000_RCTL] &= ~E1000_RCTL_BSIZE;
 	e1000[E1000_RCTL] |= E1000_RCTL_SECRC;
 
-	return 1;
+	return 0;
 }
-
+/*stone's solution for lab6-A*/
 int 
-e1000_transmit(uint8_t *data, uint32_t len)
-{
-	if (len > E1000_TX_PKT_LEN)
-	{
-		//cprintf("e1000_transmit: too long\n");
+e1000_transmit(uint8_t *data, uint32_t len){
+	if (len > E1000_TX_PKT_LEN){
 		return -E_LONG_PKT;
 	}
 
 	uint32_t tdt = e1000[E1000_TDT];
-	if ((tx_queue[tdt].status & E1000_TDESC_STATUS_DD) == 0)
-	{
-		//cprintf("e1000_transmit: full\n");
+	if ((tx_queue[tdt].status & E1000_TDESC_STATUS_DD) == 0){
 		return -E_FULL_TX;
 	}
 
@@ -122,18 +109,18 @@ e1000_transmit(uint8_t *data, uint32_t len)
 	return 0;
 }
 
+/*stone's solution for lab6-B*/
 int
-e1000_receive(uint8_t *data)
-{
-	uint32_t rdt = (e1000[E1000_RDT] + 1) % E1000_NRCVDESC;
-	if ((rcv_queue[rdt].status & E1000_RDESC_STATUS_DD) == 0)
-		return -E_EMPTY_RCV;
-	if ((rcv_queue[rdt].status & E1000_RDESC_STATUS_EOP) == 0)
-		panic("e1000_receive: exception");
-	uint32_t len = rcv_queue[rdt].length;
-	memmove(data, rcv_pkt_buf[rdt].pkt, len);
-	rcv_queue[rdt].status &= ~E1000_RDESC_STATUS_DD;
-	rcv_queue[rdt].status &= ~E1000_RDESC_STATUS_EOP;
+e1000_receive(uint8_t *data){
+	uint32_t rdt = (e1000[E1000_RDT] + 1) % E1000_NRXDESC;
+	if ((rx_queue[rdt].status & E1000_RDESC_STATUS_DD) == 0)
+		return -E_EMPTY_RX;
+	if ((rx_queue[rdt].status & E1000_RDESC_STATUS_EOP) == 0)
+		return -E_TOUGH_EOP;
+	uint32_t len = rx_queue[rdt].length;
+	memmove(data, rx_pkt_buf[rdt].pkt, len);
+	rx_queue[rdt].status &= ~E1000_RDESC_STATUS_DD;
+	rx_queue[rdt].status &= ~E1000_RDESC_STATUS_EOP;
 	e1000[E1000_RDT] = rdt;
 	return len;
 }

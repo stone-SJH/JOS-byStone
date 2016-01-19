@@ -156,4 +156,13 @@ sys_time_msec(void)
 {
 	return (unsigned int) syscall(SYS_time_msec, 0, 0, 0, 0, 0, 0);
 }
-
+/*stone's solution for lab6-A*/
+int
+sys_transmit(uint8_t *data, uint32_t len){
+	return syscall(SYS_transmit, 1, (uintptr_t)data, len, 0, 0, 0);
+}
+/*stone's solution for lab6-B*/
+int
+sys_receive(uint8_t *data, uint32_t *len){
+	return syscall(SYS_receive, 1, (uintptr_t)data, (uintptr_t)len, 0, 0, 0);
+}

@@ -1,26 +1,25 @@
 #ifndef JOS_KERN_E1000_H
 #define JOS_KERN_E1000_H
-/*stone's solution for lab6-A*/
+
 #include <kern/pci.h>
 
-uint32_t *volatile e1000;
-
-#define E1000_ADDR	KSTACKTOP 
-
-
+/*stone's solution for lab6-A PCI attach*/
 // 82540EM Desktop ID
 #define E1000_VENDOR_ID 0x8086
 #define E1000_DEVICE_ID 0x100e
 
+/*stone's solution for lab6-A MMIO mapping*/
+#define E1000_ADDR   KSTACKTOP 
+//for testing
+#define E1000_STATUS (0x0008 / 4)
+uint32_t *volatile e1000;
+
+
 #define E1000_NTXDESC  64
-#define E1000_NRCVDESC 128
+#define E1000_NRXDESC 128
 
 #define E1000_TX_PKT_LEN  1518
-#define E1000_RCV_PKT_LEN 2048
-
-
-// Registers, divided by four for indexing purposes
-#define E1000_STATUS (0x0008 / 4)
+#define E1000_RX_PKT_LEN 2048
 
 // TX Descriptors and Flags
 #define E1000_TDBAL (0x3800 / 4) // Base Address Low
@@ -45,7 +44,7 @@ uint32_t *volatile e1000;
 #define E1000_TIPG_IPGR1 (0x4 << 10) // IPG Receive Time 1
 #define E1000_TIPG_IPGR2 (0x6 << 20) // IPG Receive Time 2
 
-// RCV Registers
+// RX Registers
 #define E1000_FILTER_RAL (0x5400 / 4)      // Receive Address Low
 #define E1000_FILTER_RAH (0x5404 / 4)      // Receive Address High
 #define E1000_FILTER_RAH_VALID (0x1 << 31) // Address Valid
@@ -82,7 +81,7 @@ uint32_t *volatile e1000;
 
 struct pci_func;
 
-struct tx_desc
+struct e1000_tx_desc
 {
 	uint64_t addr;
 	uint16_t length;
@@ -98,7 +97,7 @@ struct tx_pkt
 	uint8_t pkt[E1000_TX_PKT_LEN];
 };
 
-struct rcv_desc
+struct e1000_rx_desc
 {
 	uint64_t addr;
 	uint16_t length;
@@ -108,10 +107,21 @@ struct rcv_desc
 	uint16_t special;
 } __attribute__((packed));
 
-struct rcv_pkt
+struct rx_pkt
 {
-	uint8_t pkt[E1000_RCV_PKT_LEN];
+	uint8_t pkt[E1000_RX_PKT_LEN];
 };
+
+
+
+struct e1000_tx_desc tx_queue[E1000_NTXDESC] __attribute__((aligned(16)));
+struct tx_pkt  tx_pkt_buf[E1000_NTXDESC];
+
+struct e1000_rx_desc rx_queue[E1000_NRXDESC] __attribute__((aligned(16)));
+struct rx_pkt  rx_pkt_buf[E1000_NRXDESC];
+
+struct e1000_rx_desc rx_queue[E1000_NRXDESC] __attribute__((aligned(16)));
+
 
 int e1000_attach(struct pci_func *pcif);
 int e1000_transmit(uint8_t *data, uint32_t len);

@@ -138,7 +138,7 @@ i386_init(void)
 #else
 //<<<<<<< HEAD
 	// Touch all you want.
-	ENV_CREATE(user_primes, ENV_TYPE_USER);
+	//ENV_CREATE(user_primes, ENV_TYPE_USER);
 	// ENV_CREATE(user_writemotd, ENV_TYPE_USER);
 	// ENV_CREATE(user_testfile, ENV_TYPE_USER);
 	// ENV_CREATE(user_icode, ENV_TYPE_USER);
@@ -152,8 +152,8 @@ i386_init(void)
 	//ENV_CREATE(user_yield, ENV_TYPE_USER);
 	//cprintf("create done!\n");
 	/*stone: if you want to test sfork() for challenge, PLZ remove the comment below*/
-	ENV_CREATE(user_sforkcheck, ENV_TYPE_USER);
-	ENV_CREATE(user_sforktree, ENV_TYPE_USER);
+	//ENV_CREATE(user_sforkcheck, ENV_TYPE_USER);
+	//ENV_CREATE(user_sforktree, ENV_TYPE_USER);
 //>>>>>>> lab4
 #endif // TEST*
 

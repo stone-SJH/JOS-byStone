@@ -22,7 +22,10 @@ enum {
 	SYS_ipc_recv,
 
 	SYS_sbrk,
+	/*stone's solution for lab-B*/
 	SYS_time_msec,
+	SYS_transmit,
+	SYS_receive,
 	NSYSCALLS
 };
 

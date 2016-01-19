@@ -26,14 +26,12 @@ enum {
 	E_NOT_EXEC	= 14,	// File not a valid executable
 	E_NOT_SUPP	= 15,	// Operation not supported
 	
-	/*stone's solution for lab6-A*/
+	/*stone's solution for lab6*/
 	//errors for e1000
-	E_TX_FULL = 16,
-	E_RCV_EMPTY = 17,
-	E_PKT_TOO_LONG = 18,
-	E_LONG_PKT = 19,
-	E_FULL_TX = 20,
-	E_EMPTY_RCV = 21,
+	E_TOUGH_EOP = 16,
+	E_LONG_PKT = 17,
+	E_FULL_TX = 18,
+	E_EMPTY_RX = 19,
 	
 	MAXERROR
 };
