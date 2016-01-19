@@ -25,7 +25,16 @@ enum {
 	E_FILE_EXISTS	= 13,	// File already exists
 	E_NOT_EXEC	= 14,	// File not a valid executable
 	E_NOT_SUPP	= 15,	// Operation not supported
-
+	
+	/*stone's solution for lab6-A*/
+	//errors for e1000
+	E_TX_FULL = 16,
+	E_RCV_EMPTY = 17,
+	E_PKT_TOO_LONG = 18,
+	E_LONG_PKT = 19,
+	E_FULL_TX = 20,
+	E_EMPTY_RCV = 21,
+	
 	MAXERROR
 };
 
